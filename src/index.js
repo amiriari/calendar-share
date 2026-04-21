@@ -2,6 +2,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const usersRouter = require('./routes/users')
 
 //create server ->app object is attached to everything we do with express
 const app = express();
@@ -15,6 +16,9 @@ app.use(express.json());
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
+
+app.use('/users', usersRouter)
+
 
 //start server
 app.listen(PORT, () => {

@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/amiriari/calendar-share#readme",
   "dependencies": {
-    "@prisma/client": "^7.7.0",
+    "@prisma/client": "^6.19.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

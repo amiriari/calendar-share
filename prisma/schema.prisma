@@ -1,0 +1,57 @@
+//tells prsima to generate js client
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//user table:
+model User {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  name       String
+  inviteCode String   @unique @map("invite_code")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  events              Event[]
+  sentRequests        Friendship[] @relation("Requester")
+  receivedRequests    Friendship[] @relation("Addressee")
+}
+
+//event table
+model Event {
+  id        String   @id @default(cuid())
+  name      String
+  dayOfWeek Int      @map("day_of_week")
+  startHour Int      @map("start_hour")
+  endHour   Int      @map("end_hour")
+  color     String   @default("#8B5CF6")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+//friendship table
+model Friendship {
+  id          String           @id @default(cuid())
+  status      FriendshipStatus @default(PENDING)
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  requesterId String @map("requester_id")
+  addresseeId String @map("addressee_id")
+
+  requester   User @relation("Requester", fields: [requesterId], references: [id], onDelete: Cascade)
+  addressee   User @relation("Addressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterId, addresseeId])
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
