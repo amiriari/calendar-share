@@ -23,6 +23,28 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+//get all events for a user
+router.get('/user/:userId', async (req, res) => {
+  const { userId } = req.params
+
+  try {
+    const user = await prisma.user.findUnique({ where: { id: userId } })
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+
+    const events = await prisma.event.findMany({
+      where: { userId },
+      include: { user: true }
+    })
+
+    res.json(events)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Something went wrong' })
+  }
+})
+
 //create new event
 router.post('/', async (req, res) => {
   const { name, dayOfWeek, startHour, endHour, userId } = req.body
