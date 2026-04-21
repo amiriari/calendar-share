@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const usersRouter = require('./routes/users')
 const eventsRouter = require('./routes/events')
+const friendshipsRouter = require('./routes/friendships')
 
 //create server ->app object is attached to everything we do with express
 const app = express();
@@ -20,6 +21,7 @@ app.get('/health', (req, res) => {
 
 app.use('/users', usersRouter)
 app.use('/events', eventsRouter)
+app.use('/friendships', friendshipsRouter)
 
 
 //start server
