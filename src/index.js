@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const usersRouter = require('./routes/users')
+const eventsRouter = require('./routes/events')
 
 //create server ->app object is attached to everything we do with express
 const app = express();
@@ -18,6 +19,7 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/users', usersRouter)
+app.use('/events', eventsRouter)
 
 
 //start server
