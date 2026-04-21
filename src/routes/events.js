@@ -91,4 +91,33 @@ router.post('/', async (req, res) => {
   }
 })
 
+//delete event
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params
+  const { userId } = req.body  //who is asking?
+
+  try {
+    //find event first
+    const event = await prisma.event.findUnique({ where: { id } })
+
+    //does it exist?
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' })
+    }
+
+    //does the requester own it?
+    if (event.userId !== userId) {
+      return res.status(403).json({ error: 'You do not have permission to delete this event' })
+    }
+
+    //safe to delete
+    await prisma.event.delete({ where: { id } })
+
+    res.json({ message: 'Event deleted successfully' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Something went wrong' })
+  }
+})
+
 module.exports = router
